@@ -1,6 +1,5 @@
 'use strict';
 import React, { Component } from 'react';
-import { CSSTransitionGroup } from 'react-transition-group';
 import { Row, Col} from 'react-materialize';
 import axios from 'axios';
 
@@ -45,29 +44,19 @@ class Home extends Component {
 
   render() {
     return (
-      <CSSTransitionGroup
-        transitionName="sample-app"
-        transitionEnterTimeout={500}
-        transitionAppearTimeout={500}
-        transitionLeaveTimeout={300}
-        transitionAppear={true}
-        transitionEnter={true}
-        transitionLeave={true}
-      >
-        <div className="content">
-          <Row>
-            <Col s={12}>
-              <input type="file" onChange={ this.onChange } />
-              <button type="submit" onClick={ this.upload }>Submit</button>
-            </Col>
-          </Row>
-          <Row>
-            <Col s={12}>
-              <code>{this.state.ascii}</code>
-            </Col>
-          </Row>
-        </div>
-      </CSSTransitionGroup>
+      <div className="content">
+        <Row>
+          <Col s={12}>
+            <input type="file" onChange={ this.onChange } />
+            <button type="submit" onClick={ this.upload }>Submit</button>
+          </Col>
+        </Row>
+        <Row>
+          <Col s={12}>
+            {this.state.ascii}
+          </Col>
+        </Row>
+      </div>
     );
   }
 }
