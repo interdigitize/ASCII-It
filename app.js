@@ -4,8 +4,7 @@ const bodyParser = require('body-parser');
 const { exec } = require('child_process');
 const jp2a = require( "jp2a" );
 var fs = require('fs');
-var gm = require('gm'), imageMagick = gm.subClass({ imageMagick: true });
-imageMagick = gm.subClass({ imageMagick: true });;
+var gm = require('gm').subClass({ imageMagick: true });
 var multer  = require('multer')
 // var Promise = require('bluebird');
 // Promise.promisifyAll(gm.prototype);
@@ -22,17 +21,13 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(upload.any());
 
-
-
-
-
 // Answer API requests.
 
 app.post('/photo', function (req, res, next) {
   let path = `./uploads/${req.files[0].originalname}`;
 
   var convertBuffer = new Promise((resolve, reject) => {
-     imageMagick(req.files[0].buffer, req.files[0].originalname)
+     gm(req.files[0].buffer, req.files[0].originalname)
       .noise('laplacian')
       .write(path, function (err) {
         if (err) return handle(err);
@@ -49,7 +44,7 @@ app.post('/photo', function (req, res, next) {
         // console.log('file deleted!');
       });
 
-      // gm(200, 400, "#ddff99f3")
+      // gm(300, 300, "white")
       //   .drawText(10, 50, output)
       //   .write(`./ascii/ascii-${req.files[0].originalname}`, function (err) {
       //     console.log(err);
