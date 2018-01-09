@@ -29,25 +29,24 @@ app.post('/photo', function (req, res, next) {
   var convertBuffer = new Promise((resolve, reject) => {
      gm(req.files[0].buffer, req.files[0].originalname)
       .noise('laplacian')
-      .write(path, function (err) {
-        if (err) return handle(err);
+      .write(path, function () {
         console.log('Created an image from a Buffer!');
         resolve();
       });
     });
 
   convertBuffer.then(() => {
-    jp2a( [ path, "--width=50", "--background=light" ],  function( output ){
+    jp2a( [ path, "--width=70", "--background=light" ],  function( output ){
       // console.log('converted:', output );
       fs.unlink(path, function(err) {
         if (err) throw err;
         // console.log('file deleted!');
       });
 
-      // gm(300, 300, "white")
-      //   .drawText(10, 50, output)
+      // gm(500, 300, "white")
+      //   .drawText(5, 5, output)
       //   .write(`./ascii/ascii-${req.files[0].originalname}`, function (err) {
-      //     console.log(err);
+      //     console.log('write err', err);
       // });
       // res.send([`./ascii/ascii-${req.files[0].originalname}`, output]);
       res.send(output);
@@ -55,7 +54,7 @@ app.post('/photo', function (req, res, next) {
   })
   .catch((err) => {
     //remove the file from uploads
-    console.log(err)
+    console.log('catch err', err)
     res.send('err');
   })
 })
