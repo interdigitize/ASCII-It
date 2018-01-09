@@ -3,8 +3,9 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const { exec } = require('child_process');
 const jp2a = require( "jp2a" );
-var fs = require('fs')
-  , gm = require('gm');
+var fs = require('fs');
+var gm = require('gm'), imageMagick = gm.subClass({ imageMagick: true });
+imageMagick = gm.subClass({ imageMagick: true });;
 var multer  = require('multer')
 // var Promise = require('bluebird');
 // Promise.promisifyAll(gm.prototype);
@@ -31,7 +32,7 @@ app.post('/photo', function (req, res, next) {
   let path = `./uploads/${req.files[0].originalname}`;
 
   var convertBuffer = new Promise((resolve, reject) => {
-     gm(req.files[0].buffer, req.files[0].originalname)
+     imageMagick(req.files[0].buffer, req.files[0].originalname)
       .noise('laplacian')
       .write(path, function (err) {
         if (err) return handle(err);
@@ -41,7 +42,6 @@ app.post('/photo', function (req, res, next) {
     });
 
   convertBuffer.then(() => {
-    console.log('starging conversion...');
     jp2a( [ path, "--width=50", "--background=light" ],  function( output ){
       // console.log('converted:', output );
       fs.unlink(path, function(err) {
