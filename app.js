@@ -56,7 +56,7 @@ app.post('/photo', function (req, res, next) {
     console.log(err || converted);
     gm(500, 300, "white")
     .drawText(5, 5, converted)
-    .write(`./ascii/ascii-${filename}`, function () {
+    .write(`${__dirname}/ascii/ascii-${filename}`, function () {
       res.type('jpg');
 
       // call S3 to retrieve upload file to specified bucket
