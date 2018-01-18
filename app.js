@@ -7,19 +7,18 @@ var fs = require('fs');
 // var gm = require('gm').subClass({ imageMagick: true });
 
 var multer  = require('multer')
-var config = require('./config.json');
 const AWS = require('aws-sdk');
 
-// AWS.config.update({region: 'us-west-1'});
-// AWS.config.update({
-//   accessKeyId: process.env.ACCESS_KEY_ID || config.ACCESS_KEY_ID,
-//   secretAccessKey: process.env.SECRET_ACCESS_KEY || config.SECRET_ACCESS_KEY
-// });
-//
-// // Create S3 service object
-// s3 = new AWS.S3({apiVersion: '2006-03-01'});
+AWS.config.update({region: 'us-west-1'});
+AWS.config.update({
+  accessKeyId: process.env.ACCESS_KEY_ID || require('./config.json').ACCESS_KEY_ID,
+  secretAccessKey: process.env.SECRET_ACCESS_KEY || require('./config.json').SECRET_ACCESS_KEY
+});
 
-// var upload = multer({ dest: 'uploads/' })
+// Create S3 service object
+s3 = new AWS.S3({apiVersion: '2006-03-01'});
+
+var upload = multer({ dest: 'uploads/' })
 var upload = multer();
 const app = express();
 const PORT = process.env.PORT || 3000;
