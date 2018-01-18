@@ -15,31 +15,31 @@ class Home extends Component {
 
   }
 
-  upload() {
+  upload(e) {
+    e.preventDefault();
     var url = '/photo';
     let data = this.state.file
-    console.log(data);
     var config = {
       headers: { 'content-type': 'multipart/form-data' }
     }
     axios({method: 'post', url, data, config})
      .then((res) => {
-       this.setState({ascii: res.data})
-       console.log(res.data)
-     })
+       this.setState({ascii: res.data}, () => {
+         document.getElementById("upload").reset();
+       })
+   })
      .catch((err) => {
        console.log(err)
      })
   }
 
   onChange(e) {
-    let formData = new FormData(); //FormData needs to be used for Multer to parse the data on the server
+    e.preventDefault();
+    let formData = new FormData();
     formData.append('file', e.target.files[0]);
     this.setState({
       file: formData
     });
-    console.log('file', this.state.file);
-    console.log('formData', formData)
   }
 
   render() {
@@ -47,13 +47,15 @@ class Home extends Component {
       <div className="content">
         <Row>
           <Col s={12}>
-            <input type="file" onChange={ this.onChange } />
-            <button type="submit" onClick={ this.upload }>Submit</button>
+            <form id='upload'>
+              <input type="file" onChange={ this.onChange }/>
+              <button type="submit" onClick={ this.upload }>Submit</button>
+            </form>
           </Col>
         </Row>
         <Row>
           <Col s={12}>
-            {this.state.ascii}
+            <img src={this.state.ascii} style={{width: '100%', height: 'auto'}}/>
           </Col>
         </Row>
       </div>
