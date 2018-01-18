@@ -42,6 +42,9 @@ app.post('/photo', function (req, res, next) {
     Body: req.files[0].buffer,
     ContentType: req.files[0].mimetype
   };
+  if (!fs.existsSync('./ascii/')) {
+    fs.mkdirSync('./ascii/');
+  }
   let file = `./ascii/ascii-${filename}`;
   var convertBuffer = new Promise((resolve, reject) => {
      gm(req.files[0].buffer, filename)
