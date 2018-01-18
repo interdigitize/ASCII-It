@@ -42,22 +42,23 @@ app.post('/photo', function (req, res, next) {
     Body: req.files[0].buffer,
     ContentType: req.files[0].mimetype
   };
-  if (!fs.existsSync('./ascii/')) {
-    fs.mkdirSync('./ascii/');
+  if (!fs.existsSync(`${__dirname}/ascii/`)) {
+    fs.mkdirSync(`${__dirname}/ascii/`);
   }
-  let file = `./ascii/ascii-${filename}`;
+  let file = `${__dirname}/ascii/ascii-${filename}`;
   var convertBuffer = new Promise((resolve, reject) => {
      gm(req.files[0].buffer, filename)
       .noise('laplacian')
       .write(file, function ( ) {
         console.log('Created an image from a Buffer!');
+        console.log('file', file)
         resolve();
       });
     });
   convertBuffer.then(() => {
     imageToAscii(file, {colored: false}, (err, converted) => {
     console.log(err || converted);
-    gm(500, 300, "white")
+    gm(500, 500, "white")
     .drawText(5, 5, converted)
     .write(`${__dirname}/ascii/ascii-${filename}`, function () {
       res.type('jpg');
