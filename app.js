@@ -32,14 +32,14 @@ app.post('/photo', function (req, res, next) {
   console.log('file info', req.files[0]);
   var mimetype = req.files[0].mimetype;
   var filename = req.files[0].originalname;
-  var key = Date.now().toString() + '_' + filename;
+  // var key = Date.now().toString() + '_' + filename;
   var region = 'us-west-1';
   var bucket = 'ascii-it';
   var uploadParams = {
     ACL: 'public-read',
     Bucket: bucket,
-    Key: key,
-    Body: req.files[0].buffer,
+    // Key: key,
+    // Body: req.files[0].buffer,
     ContentType: req.files[0].mimetype
   };
   if (!fs.existsSync(`${__dirname}/ascii/`)) {
@@ -64,7 +64,7 @@ app.post('/photo', function (req, res, next) {
       res.type('jpg');
 
       // call S3 to retrieve upload file to specified bucket
-      var fileStream = fs.createReadStream(file);
+      var fileStream = fs.createReadStream(req.files[0].buffer);
       fileStream.on('error', function(err) {
         console.log('File Error', err);
       });
