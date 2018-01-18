@@ -52,10 +52,10 @@ app.post('/photo', function (req, res, next) {
       .write(file, function ( ) {
         console.log('Created an image from a Buffer!');
         console.log('file', file)
-        resolve();
+        resolve(file);
       });
     });
-  convertBuffer.then(() => {
+  convertBuffer.then((file) => {
     imageToAscii(file, {colored: false}, (err, converted) => {
     console.log(err || converted);
     gm(500, 500, "white")
@@ -64,7 +64,7 @@ app.post('/photo', function (req, res, next) {
       res.type('jpg');
 
       // call S3 to retrieve upload file to specified bucket
-      var fileStream = fs.createReadStream(req.files[0].buffer);
+      var fileStream = fs.createReadStream(file);
       fileStream.on('error', function(err) {
         console.log('File Error', err);
       });
