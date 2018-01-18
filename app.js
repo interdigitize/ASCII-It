@@ -4,8 +4,8 @@ const bodyParser = require('body-parser');
 const { exec } = require('child_process');
 const imageToAscii = require("image-to-ascii");
 var fs = require('fs');
-var gm = require('gm')
-imageMagick = gm.subClass({ imageMagick: true });
+// var gm = require('gm').subClass({ imageMagick: true });
+
 var multer  = require('multer')
 var config = require('./config.json');
 const AWS = require('aws-sdk');
