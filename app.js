@@ -44,10 +44,11 @@ app.post('/photo', function(req, res, next) {
   if (!fs.existsSync(`${__dirname}/ascii/`)) {
     fs.mkdirSync(`${__dirname}/ascii/`);
   }
+
   let file = `${__dirname}/ascii/ascii-${filename}`;
   imageToAscii(req.files[0].buffer, { colored: false }, (err, converted) => {
     if (err) {
-      console.log('Unknown Error');
+      console.log('conversion error', err);
       return;
     }
     console.log(converted);
@@ -56,7 +57,7 @@ app.post('/photo', function(req, res, next) {
       .drawText(5, 5, converted)
       .write(`${__dirname}/ascii/ascii-${filename}`, function(err) {
         if (err) {
-          console.log('Unknown Error');
+          console.log('saving to a jpg error', err);
           return;
         }
         // call S3 to retrieve upload file to specified bucket
