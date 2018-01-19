@@ -55,6 +55,7 @@ app.post('/photo', function(req, res, next) {
 
     gm(500, 500, 'white')
       .drawText(5, 5, converted)
+      .setFormat('jpeg')
       .write(`${__dirname}/ascii/ascii-${filename}`, function(err) {
         if (err) {
           console.log('saving to a jpg  error', err);
