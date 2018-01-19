@@ -28,7 +28,6 @@ app.use(bodyParser.json());
 app.use(multer().any());
 
 app.post('/photo', function(req, res, next) {
-  console.log('file info', req.files[0]);
   var mimetype = req.files[0].mimetype;
   var filename = req.files[0].originalname;
   // var key = Date.now().toString() + '_' + filename;
@@ -46,6 +45,7 @@ app.post('/photo', function(req, res, next) {
   }
 
   let file = `${__dirname}/ascii/ascii-${filename}`;
+  console.log('buffer file', req.files[0].buffer);
   imageToAscii(req.files[0].buffer, { colored: false }, (err, converted) => {
     if (err) {
       console.log('conversion error', err);
@@ -57,7 +57,7 @@ app.post('/photo', function(req, res, next) {
       .drawText(5, 5, converted)
       .write(`${__dirname}/ascii/ascii-${filename}`, function(err) {
         if (err) {
-          console.log('saving to a jpg error', err);
+          console.log('saving to a jpg  error', err);
           return;
         }
         // call S3 to retrieve upload file to specified bucket
