@@ -55,11 +55,15 @@ class Home extends Component {
         </Row>
         <Row>
           <Col s={12}>
-            <img
-              alt="ASCII version of uploaded image"
-              src={this.state.ascii}
-              style={{ width: '100%', height: 'auto' }}
-            />
+            {this.state.ascii !== '' ? (
+              <img
+                alt="ASCII version"
+                src={this.state.ascii}
+                style={{ width: '100%', height: 'auto' }}
+              />
+            ) : (
+              <span />
+            )}
           </Col>
         </Row>
       </div>
