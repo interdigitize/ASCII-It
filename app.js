@@ -53,64 +53,64 @@ app.post('/photo', function(req, res, next) {
   //   }
   //   console.log(converted);
 
-    gm(500, 500, 'white')
-      .drawText(5, 5, req.files[0].buffer)
-      .setFormat('jpeg')
-      .write(`${__dirname}/ascii/ascii-${filename}`, function(err) {
-        if (err) {
-          console.log('saving to a jpg  error', err);
-          return;
-        }
-        // call S3 to retrieve upload file to specified bucket
-        var fileStream = fs.createReadStream(file);
-        fileStream.on('error', function(err) {
-          console.log('File Error', err);
-        });
-        uploadParams.Body = fileStream;
-        uploadParams.Key = Date.now().toString() + '_ascii-' + filename;
-        console.log(uploadParams.Key);
-
-        //call S3 to retrieve upload file to specified bucket
-        s3.upload(uploadParams, function(err, data) {
-          if (err) {
-            console.log('Error', err);
-          }
-          if (data) {
-            var options = {
-              root: __dirname + '/ascii/',
-              dotfiles: 'deny',
-              headers: {
-                'x-timestamp': Date.now(),
-                'x-sent': true
-              }
-            };
-            console.log('Upload Success', data.Location);
-            res.send(
-              `https://s3-us-west-1.amazonaws.com/ascii-it/${uploadParams.Key}`,
-              options,
-              function(err) {
-                if (err) {
-                  next(err);
-                  console.log(err);
-                } else {
-                  console.log('Sent', `ascii-${filename}`);
-                }
-              }
-            );
-            fs.unlink(file, function(err) {
-              if (err) throw err;
-              console.log('file deleted!');
-            });
-          }
-        });
+  gm(500, 500, 'white')
+    .drawText(5, 5, req.files[0].buffer)
+    .setFormat('jpeg')
+    .write(`${__dirname}/ascii/ascii-${filename}`, function(err) {
+      if (err) {
+        console.log('saving to a jpg  error', err);
+        return;
+      }
+      // call S3 to retrieve upload file to specified bucket
+      var fileStream = fs.createReadStream(file);
+      fileStream.on('error', function(err) {
+        console.log('File Error', err);
       });
-  });
-  // })
-  // .catch(err => {
-  //   console.log('catch err', err);
-  //   res.send('error');
-  // });
+      uploadParams.Body = fileStream;
+      uploadParams.Key = Date.now().toString() + '_ascii-' + filename;
+      console.log(uploadParams.Key);
+
+      //call S3 to retrieve upload file to specified bucket
+      s3.upload(uploadParams, function(err, data) {
+        if (err) {
+          console.log('Error', err);
+        }
+        if (data) {
+          var options = {
+            root: __dirname + '/ascii/',
+            dotfiles: 'deny',
+            headers: {
+              'x-timestamp': Date.now(),
+              'x-sent': true
+            }
+          };
+          console.log('Upload Success', data.Location);
+          res.send(
+            `https://s3-us-west-1.amazonaws.com/ascii-it/${uploadParams.Key}`,
+            options,
+            function(err) {
+              if (err) {
+                next(err);
+                console.log(err);
+              } else {
+                console.log('Sent', `ascii-${filename}`);
+              }
+            }
+          );
+          fs.unlink(file, function(err) {
+            if (err) throw err;
+            console.log('file deleted!');
+          });
+        }
+      });
+    });
 });
+// })
+// .catch(err => {
+//   console.log('catch err', err);
+//   res.send('error');
+// });
+// });
 
 // All remaining requests return the React app, so it can handle routing.
 app.get('*', function(request, response) {
