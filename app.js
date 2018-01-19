@@ -2,33 +2,32 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const { exec } = require('child_process');
-const imageToAscii = require("image-to-ascii");
+const imageToAscii = require('image-to-ascii');
 var fs = require('fs');
 var gm = require('gm').subClass({ imageMagick: true });
-var multer  = require('multer')
+var multer = require('multer');
 const AWS = require('aws-sdk');
+const PORT = process.env.PORT || 3000;
 
-AWS.config.update({region: 'us-west-1'});
+AWS.config.update({ region: 'us-west-1' });
 AWS.config.update({
-  accessKeyId: process.env.ACCESS_KEY_ID || require('./config.json').ACCESS_KEY_ID,
-  secretAccessKey: process.env.SECRET_ACCESS_KEY || require('./config.json').SECRET_ACCESS_KEY
+  accessKeyId:
+    process.env.ACCESS_KEY_ID || require('./config.json').ACCESS_KEY_ID,
+  secretAccessKey:
+    process.env.SECRET_ACCESS_KEY || require('./config.json').SECRET_ACCESS_KEY
 });
 
-// Create S3 service object
-s3 = new AWS.S3({apiVersion: '2006-03-01'});
+s3 = new AWS.S3({ apiVersion: '2006-03-01' });
 
-var upload = multer({ dest: 'uploads/' })
-var upload = multer();
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Priority serve any static files.
 app.use(express.static(path.resolve(__dirname, 'client/build')));
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
-app.use(upload.any());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(multer().any());
 
-app.post('/photo', function (req, res, next) {
+app.post('/photo', function(req, res, next) {
   console.log('file info', req.files[0]);
   var mimetype = req.files[0].mimetype;
   var filename = req.files[0].originalname;
@@ -46,73 +45,76 @@ app.post('/photo', function (req, res, next) {
     fs.mkdirSync(`${__dirname}/ascii/`);
   }
   let file = `${__dirname}/ascii/ascii-${filename}`;
-  var convertBuffer = new Promise((resolve, reject) => {
-     gm(req.files[0].buffer, filename)
-      .noise('laplacian')
-      .write(file, function ( ) {
-        console.log('Created an image from a Buffer!');
-        console.log('file', file)
-        resolve(file);
-      });
-    });
-  convertBuffer.then((file) => {
-    imageToAscii(file, {colored: false}, (err, converted) => {
-    console.log(err || converted);
-    gm(500, 500, "white")
-    .drawText(5, 5, converted)
-    .write(`${__dirname}/ascii/ascii-${filename}`, function () {
-      res.type('jpg');
+  imageToAscii(req.files[0].buffer, { colored: false }, (err, converted) => {
+    if (err) {
+      console.log('Unknown Error');
+      return;
+    }
+    console.log(converted);
 
-      // call S3 to retrieve upload file to specified bucket
-      var fileStream = fs.createReadStream(file);
-      fileStream.on('error', function(err) {
-        console.log('File Error', err);
-      });
-      uploadParams.Body = fileStream;
-      uploadParams.Key = path.basename(file);
-
-      // call S3 to retrieve upload file to specified bucket
-      s3.upload (uploadParams, function (err, data) {
+    gm(500, 500, 'white')
+      .drawText(5, 5, converted)
+      .write(`${__dirname}/ascii/ascii-${filename}`, function(err) {
         if (err) {
-          console.log("Error", err);
-        } if (data) {
-          var options = {
-            root: __dirname + '/ascii/',
-            dotfiles: 'deny',
-            headers: {
-              'x-timestamp': Date.now(),
-              'x-sent': true,
-            }
-          };
-          console.log("Upload Success", data.Location);
-          res.send(`https://s3-us-west-1.amazonaws.com/ascii-it/ascii-${filename}`, options, function (err) {
-            if (err) {
-              next(err);
-              console.log(err);
-            } else {
-              console.log('Sent', `ascii-${filename}`);
-            }
-          });
-          fs.unlink(file, function(err) {
-            if (err) throw err;
-            console.log('file deleted!');
-          });
+          console.log('Unknown Error');
+          return;
         }
+        // call S3 to retrieve upload file to specified bucket
+        var fileStream = fs.createReadStream(file);
+        fileStream.on('error', function(err) {
+          console.log('File Error', err);
+        });
+        uploadParams.Body = fileStream;
+        uploadParams.Key = Date.now().toString() + '_ascii-' + filename;
+        console.log(uploadParams.Key);
+
+        //call S3 to retrieve upload file to specified bucket
+        s3.upload(uploadParams, function(err, data) {
+          if (err) {
+            console.log('Error', err);
+          }
+          if (data) {
+            var options = {
+              root: __dirname + '/ascii/',
+              dotfiles: 'deny',
+              headers: {
+                'x-timestamp': Date.now(),
+                'x-sent': true
+              }
+            };
+            console.log('Upload Success', data.Location);
+            res.send(
+              `https://s3-us-west-1.amazonaws.com/ascii-it/${uploadParams.Key}`,
+              options,
+              function(err) {
+                if (err) {
+                  next(err);
+                  console.log(err);
+                } else {
+                  console.log('Sent', `ascii-${filename}`);
+                }
+              }
+            );
+            fs.unlink(file, function(err) {
+              if (err) throw err;
+              console.log('file deleted!');
+            });
+          }
+        });
       });
-    })
-    });
-  })
-  .catch((err) => {
-    console.log('catch err', err)
-    res.send('error');
-  })
-})
+  });
+  // })
+  // .catch(err => {
+  //   console.log('catch err', err);
+  //   res.send('error');
+  // });
+});
 
 // All remaining requests return the React app, so it can handle routing.
 app.get('*', function(request, response) {
   response.sendFile(path.resolve(__dirname, 'client/build', 'index.html'));
 });
 
-app.listen(PORT, function () {
+app.listen(PORT, function() {
   console.log(`Listening on port ${PORT}`);
 });

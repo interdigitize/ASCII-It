@@ -12,10 +12,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build --watch",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "prettier-watch": "onchange '**/*.js' -- prettier --single-quote --flow --trailing-comma --write {{changed}}"
+    "prettier-watch":
+      "onchange '**/*.js' -- prettier --single-quote --flow --trailing-comma --write {{changed}}"
   },
   "devDependencies": {
     "onchange": "^3.3.0",
