@@ -45,16 +45,16 @@ app.post('/photo', function(req, res, next) {
   }
 
   let file = `${__dirname}/ascii/ascii-${filename}`;
-  console.log('buffer file', req.files[0].buffer);
-  imageToAscii(req.files[0].buffer, { colored: false }, (err, converted) => {
-    if (err) {
-      console.log('conversion error', err);
-      return;
-    }
-    console.log(converted);
+  // console.log('buffer file', req.files[0].buffer);
+  // imageToAscii(req.files[0].buffer, { colored: false }, (err, converted) => {
+  //   if (err) {
+  //     console.log('conversion error', err);
+  //     return;
+  //   }
+  //   console.log(converted);
 
     gm(500, 500, 'white')
-      .drawText(5, 5, converted)
+      .drawText(5, 5, req.files[0].buffer)
       .setFormat('jpeg')
       .write(`${__dirname}/ascii/ascii-${filename}`, function(err) {
         if (err) {
