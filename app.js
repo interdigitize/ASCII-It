@@ -34,63 +34,59 @@ app.post('/photo', function(req, res, next) {
     ContentType: req.files[0].mimetype
   };
 
-  // imageToAscii(req.files[0].buffer, { colored: false }, (err, converted) => {
-  //   if (err) {
-  //     console.log('conversion error', err);
-  //     return;
-  //   }
-  //   console.log(converted);
+  imageToAscii(req.files[0].buffer, { colored: false }, (err, converted) => {
+    if (err) {
+      console.log('conversion error', err);
+      return;
+    }
+    console.log(converted);
 
-  let file = `${__dirname}/ascii/ascii-${filename}`;
-  // gm(500, 500, 'white')
-  //   .drawText(5, 5, 'something')
-  //   .setFormat('jpeg')
-  gm(
-    'https://s3-us-west-1.amazonaws.com/ascii-it/1516340708276_ascii-2016-masqueradePrep.jpg'
-  )
-    .stroke('#ffffff')
-    .drawCircle(10, 10, 20, 10)
-    .font('Courier.ttf', 48)
-    .drawText(30, 40, 'GMagick!')
-    .stream(function(err, stdout, stderr) {
-      stdout.pipe(uploadFromStream());
+    let file = `${__dirname}/ascii/ascii-${filename}`;
+    gm(500, 500, 'white')
+      .font('Courier.ttf', 8)
+      .setFormat('jpeg')
+      .drawText(5, 5, converted)
+      .stream(function(err, stdout, stderr) {
+        stdout.pipe(uploadFromStream());
 
-      function uploadFromStream() {
-        var pass = new stream.PassThrough();
-        uploadParams.Body = pass;
-        uploadParams.Key = Date.now().toString() + '_ascii-' + filename;
-        s3.upload(uploadParams, function(err, data) {
-          if (err) {
-            console.log('Error', err);
-          }
-          if (data) {
-            var options = {
-              root: __dirname + '/ascii/',
-              dotfiles: 'deny',
-              headers: {
-                'x-timestamp': Date.now(),
-                'x-sent': true
-              }
-            };
-            console.log('Upload Success', data.Location);
-            res.send(
-              `https://s3-us-west-1.amazonaws.com/ascii-it/${uploadParams.Key}`,
-              options,
-              function(err) {
-                if (err) {
-                  next(err);
-                  console.log(err);
-                } else {
-                  console.log('Sent', `ascii-${filename}`);
+        function uploadFromStream() {
+          var pass = new stream.PassThrough();
+          uploadParams.Body = pass;
+          uploadParams.Key = Date.now().toString() + '_ascii-' + filename;
+          s3.upload(uploadParams, function(err, data) {
+            if (err) {
+              console.log('Error', err);
+            }
+            if (data) {
+              var options = {
+                root: __dirname + '/ascii/',
+                dotfiles: 'deny',
+                headers: {
+                  'x-timestamp': Date.now(),
+                  'x-sent': true
                 }
-              }
-            );
-          }
-        });
-        return pass;
-      }
-    });
-  // });
+              };
+              console.log('Upload Success', data.Location);
+              res.send(
+                `https://s3-us-west-1.amazonaws.com/ascii-it/${
+                  uploadParams.Key
+                }`,
+                options,
+                function(err) {
+                  if (err) {
+                    next(err);
+                    console.log(err);
+                  } else {
+                    console.log('Sent', `ascii-${filename}`);
+                  }
+                }
+              );
+            }
+          });
+          return pass;
+        }
+      });
+  });
 });
 
 // All remaining requests return the React app, so it can handle routing.
