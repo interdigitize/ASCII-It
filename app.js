@@ -42,7 +42,6 @@ app.post('/photo', function(req, res, next) {
     console.log(converted);
 
     let file = `${__dirname}/ascii/ascii-${filename}`;
-    //save the converted ascii as a jpg
     gm(500, 500, 'white')
       .drawText(5, 5, converted)
       .setFormat('jpeg')

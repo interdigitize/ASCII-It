@@ -2,13 +2,14 @@
   "name": "ascii-it",
   "version": "0.1.0",
   "engines": {
-    "node": "6.9.2"
+    "node": "8.9.3"
   },
   "private": true,
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "heroku-postbuild": "cd client/ && yarn install && yarn install --only=dev --no-shrinkwrap && yarn run build",
+    "heroku-postbuild":
+      "cd client/ && yarn install && yarn install --only=dev --no-shrinkwrap && yarn run build",
     "lint": "eslint **/*.{js, jsx} --quiet"
   },
   "dependencies": {
