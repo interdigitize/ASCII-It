@@ -8,15 +8,11 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "heroku-postbuild":
-      "cd client/ && yarn install && yarn install --only=dev --no-shrinkwrap && yarn run build",
+    "heroku-postbuild": "cd client/ && yarn install && yarn install --only=dev --no-shrinkwrap && yarn run build",
     "lint": "eslint **/*.{js, jsx} --quiet"
   },
   "dependencies": {
     "aws-sdk": "^2.183.0",
-    "body-parser": "~1.18.2",
-    "config": "^1.29.2",
-    "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.15.5",
     "gm": "^1.23.1",
