@@ -42,9 +42,16 @@ app.post('/photo', function(req, res, next) {
   //   console.log(converted);
 
   let file = `${__dirname}/ascii/ascii-${filename}`;
-  gm(500, 500, 'white')
-    .drawText(5, 5, 'something')
-    .setFormat('jpeg')
+  // gm(500, 500, 'white')
+  //   .drawText(5, 5, 'something')
+  //   .setFormat('jpeg')
+  gm(
+    'https://s3-us-west-1.amazonaws.com/ascii-it/1516340708276_ascii-2016-masqueradePrep.jpg'
+  )
+    .stroke('#ffffff')
+    .drawCircle(10, 10, 20, 10)
+    .font('Courier.ttf', 48)
+    .drawText(30, 40, 'GMagick!')
     .stream(function(err, stdout, stderr) {
       stdout.pipe(uploadFromStream());
 
