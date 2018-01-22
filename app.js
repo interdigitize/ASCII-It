@@ -34,14 +34,14 @@ app.post('/photo', function(req, res, next) {
     ContentType: req.files[0].mimetype
   };
 
+  console.log('uploaded file:', req.files[0]);
+  console.log('buffer:', req.files[0].buffer);
   imageToAscii(req.files[0].buffer, { colored: false }, (err, converted) => {
     if (err) {
       console.log('conversion error', err);
       return;
     }
     console.log(converted);
-    console.log('gm', gm);
-    console.log('imageToAscii', imageToAscii);
     res.send();
     // gm(500, 500, 'white')
     //   .drawCircle(10, 10, 20, 10)
