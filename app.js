@@ -40,6 +40,9 @@ app.post('/photo', function(req, res, next) {
   //     return;
   //   }
   //   console.log(converted);
+  console.log('gm', gm);
+  console.log('imageToAscii', imageToAscii);
+
   gm(500, 500, 'white')
     .drawCircle(10, 10, 20, 10)
     .stroke('#000000')
