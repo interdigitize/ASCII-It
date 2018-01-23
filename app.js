@@ -28,23 +28,38 @@ app.post('/photo', function(req, res, next) {
   var mimetype = req.files[0].mimetype;
   var filename = req.files[0].originalname;
   var region = 'us-west-1';
+  let width = undefined;
+  let height = undefined;
+  let fontSize = 8;
   var uploadParams = {
     ACL: 'public-read',
     Bucket: 'ascii-it',
     ContentType: req.files[0].mimetype
   };
+  gm(req.files[0].buffer).size(function(err, size) {
+    if (!err) {
+      width = size.width;
+      height = size.height;
+      // console.log('width:', width, '\nheight:', height);
+      if (width > height) {
+        fontSize = width / 100;
+      } else {
+        fontSize = height / 100;
+      }
+    }
+  });
 
   imageToAscii(req.files[0].buffer, { colored: false }, (err, converted) => {
     if (err) {
       console.log('conversion error', err);
       return;
     }
-    gm(500, 500, 'white')
+    gm(width, height, 'white')
       // .drawCircle(10, 10, 20, 10)
       // .stroke('#000000')
-      .font('Courier.ttf', 8)
+      .font('Courier.ttf', width / 100)
       .setFormat('jpeg')
-      .drawText(5, 5, converted)
+      .drawText(0, 0, converted)
       .stream(function(err, stdout, stderr) {
         stdout.pipe(uploadFromStream());
 
