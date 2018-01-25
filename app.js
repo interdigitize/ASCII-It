@@ -62,7 +62,6 @@ app.post('/photo', function(req, res, next) {
       return;
     }
     gm(width, height, '#333333')
-      // .drawCircle(10, 10, 20, 10)
       .stroke('#CCCCCC')
       .font('Courier.ttf', fontSize)
       .setFormat('jpeg')
