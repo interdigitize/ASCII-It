@@ -40,12 +40,19 @@ app.post('/photo', function(req, res, next) {
     if (!err) {
       width = size.width;
       height = size.height;
-      // console.log('width:', width, '\nheight:', height);
       if (width > height) {
         fontSize = width / 100;
       } else {
-        fontSize = height / 100;
+        fontSize = height / 80;
       }
+      // console.log(
+      //   'width:',
+      //   width,
+      //   '\nheight:',
+      //   height,
+      //   '\nfontSize:',
+      //   fontSize
+      // );
     }
   });
 
@@ -54,12 +61,13 @@ app.post('/photo', function(req, res, next) {
       console.log('conversion error', err);
       return;
     }
-    gm(width, height, 'white')
+    gm(width, height, '#333333')
       // .drawCircle(10, 10, 20, 10)
-      // .stroke('#000000')
-      .font('Courier.ttf', width / 100)
+      .stroke('#CCCCCC')
+      .font('Courier.ttf', fontSize)
       .setFormat('jpeg')
-      .drawText(0, 0, converted)
+      .drawText(10, 30, converted)
+      .trim()
       .stream(function(err, stdout, stderr) {
         stdout.pipe(uploadFromStream());
 
