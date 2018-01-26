@@ -41,3 +41,7 @@ button {
 button:disabled {
   opacity: 0.5;
 }
+
+button:active {
+  background-color: steelblue;
+}
