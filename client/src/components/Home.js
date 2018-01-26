@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import './Spinner.css';
 
 class Home extends Component {
   constructor(props) {
@@ -45,6 +46,7 @@ class Home extends Component {
 
   onChange(e) {
     e.preventDefault();
+    console.log('file info', e.target.files[0]);
     let formData = new FormData();
     formData.append('file', e.target.files[0]);
     this.setState({
@@ -71,6 +73,14 @@ class Home extends Component {
             ASCII It
           </button>
         </form>
+        {this.state.selectDisabled === true ? (
+          <div class="spinner">
+            <div class="cube1" />
+            <div class="cube2" />
+          </div>
+        ) : (
+          <span />
+        )}
         {this.state.ascii !== '' ? (
           <div>
             <img
