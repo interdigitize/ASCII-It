@@ -6,7 +6,6 @@
     "axios": "^0.17.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-materialize": "^1.1.2",
     "react-router-dom": "^4.2.2",
     "react-scripts": "^1.0.17"
   },
@@ -15,8 +14,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "prettier-watch":
-      "onchange '**/*.js' -- prettier --single-quote --flow --trailing-comma --write {{changed}}"
+    "prettier-watch": "onchange '**/*.js' -- prettier --single-quote --flow --trailing-comma --write {{changed}}"
   },
   "devDependencies": {
     "onchange": "^3.3.0",
