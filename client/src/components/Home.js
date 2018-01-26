@@ -107,49 +107,55 @@ class Home extends Component {
   render() {
     return (
       <main>
-        <h2>Upload an image to convert it.</h2>
-        <form id="upload">
-          <input
-            type="file"
-            onChange={this.onChange}
-            disabled={this.state.selectDisabled}
-          />
-          <button
-            type="submit"
-            onClick={this.upload}
-            disabled={this.state.submitDisabled}>
-            ASCII It
-          </button>
-          {this.state.typeError ? (
-            <div className="error">Please select a jpg or png.</div>
-          ) : (
-            <span />
-          )}
-          {this.state.sizeError ? (
-            <div className="error">Please select a file smaller than 5MB.</div>
-          ) : (
-            <span />
-          )}
-        </form>
-        {this.state.selectDisabled === true ? (
-          <div class="spinner">
-            <div class="cube1" />
-            <div class="cube2" />
-          </div>
-        ) : (
-          <span />
-        )}
-        {this.state.ascii !== '' ? (
-          <div>
-            <img
-              alt="ASCII version"
-              src={this.state.ascii}
-              style={{ width: '100%', height: 'auto' }}
+        <div className="col">
+          <h2>Upload an image to convert it.</h2>
+          <form id="upload">
+            <input
+              type="file"
+              onChange={this.onChange}
+              disabled={this.state.selectDisabled}
             />
-          </div>
-        ) : (
-          <span />
-        )}
+            <button
+              type="submit"
+              onClick={this.upload}
+              disabled={this.state.submitDisabled}>
+              ASCII It
+            </button>
+            {this.state.typeError ? (
+              <div className="error">Please select a jpg or png.</div>
+            ) : (
+              <span />
+            )}
+            {this.state.sizeError ? (
+              <div className="error">
+                Please select a file smaller than 5MB.
+              </div>
+            ) : (
+              <span />
+            )}
+          </form>
+        </div>
+        <div className="col">
+          {this.state.selectDisabled === true ? (
+            <div class="spinner">
+              <div class="cube1" />
+              <div class="cube2" />
+            </div>
+          ) : (
+            <span />
+          )}
+          {this.state.ascii !== '' ? (
+            <div>
+              <img
+                alt="ASCII version"
+                src={this.state.ascii}
+                style={{ width: '100%', height: 'auto' }}
+              />
+            </div>
+          ) : (
+            <span />
+          )}
+        </div>
       </main>
     );
   }

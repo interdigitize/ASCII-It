@@ -29,15 +29,24 @@ footer {
   min-height: 70px;
   color: #ffffff;
   width: 100vw;
-  padding-left: 1rem;
 }
 
 main {
-  margin: 0 5% 2% 5%;
+  margin: 1rem;
+  display: grid;
+  grid-template-columns: 55% 45%;
+}
+
+.col {
+  display: flex;
+  /* align-items: center; */
+  flex-direction: column;
+  justify-content: center;
 }
 
 a {
   color: lightskyblue;
+  padding-left: 1rem;
 }
 
 button {
