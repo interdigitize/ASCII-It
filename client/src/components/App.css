@@ -4,39 +4,40 @@
 
 html {
   font-size: 100%;
+  display: flex;
 }
 
-/*.upload-btn-wrapper {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
+header {
+  text-align: center;
+  background-color: #333333;
+  height: 5%;
+  min-height: 70px;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
 }
 
-.btn {
-  border: 2px solid gray;
-  color: gray;
-  background-color: white;
-  padding: 8px 20px;
-  border-radius: 8px;
-  font-size: 20px;
-  font-weight: bold;
+footer {
+  text-align: center;
+  background-color: #333333;
+  height: 5%;
+  min-height: 70px;
+  color: #ffffff;
+  justify-content: flex-end;
+  width: 100vw;
 }
 
-.upload-btn-wrapper input[type=file] {
-  font-size: 100px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-}*/
-
-/*
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+button {
+  border-radius: 5px;
+  background-color: steelblue;
+  color: white;
+  padding: 10px 20px;
+  border: 0;
+  margin: 1rem 1rem 1.5rem 0rem;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}*/
+button:disabled {
+  opacity: 0.5;
+}

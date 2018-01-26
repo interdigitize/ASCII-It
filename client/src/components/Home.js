@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-materialize';
 import axios from 'axios';
 
 class Home extends Component {
@@ -7,7 +6,8 @@ class Home extends Component {
     super(props);
     this.state = {
       file: undefined,
-      ascii: ''
+      ascii: '',
+      disabled: false
     };
     this.upload = this.upload.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -20,11 +20,18 @@ class Home extends Component {
     var config = {
       headers: { 'content-type': 'multipart/form-data' }
     };
+    this.setState({ disabled: true });
     axios({ method: 'post', url, data, config })
       .then(res => {
-        this.setState({ ascii: res.data }, () => {
-          document.getElementById('upload').reset();
-        });
+        this.setState(
+          {
+            ascii: res.data,
+            disabled: false
+          },
+          () => {
+            document.getElementById('upload').reset();
+          }
+        );
       })
       .catch(err => {
         console.log(err);
@@ -43,29 +50,32 @@ class Home extends Component {
   render() {
     return (
       <div className="content">
-        <Row>
-          <Col s={12}>
-            <form id="upload">
-              <input type="file" onChange={this.onChange} />
-              <button type="submit" onClick={this.upload}>
-                Submit
-              </button>
-            </form>
-          </Col>
-        </Row>
-        <Row>
-          <Col s={12}>
-            {this.state.ascii !== '' ? (
-              <img
-                alt="ASCII version"
-                src={this.state.ascii}
-                style={{ width: '100%', height: 'auto' }}
-              />
-            ) : (
-              <span />
-            )}
-          </Col>
-        </Row>
+        <h2>Upload an image to convert it.</h2>
+
+        <form id="upload">
+          <input
+            type="file"
+            onChange={this.onChange}
+            disabled={this.state.disabled}
+          />
+          <button
+            type="submit"
+            onClick={this.upload}
+            disabled={this.state.disabled}>
+            ASCII It
+          </button>
+        </form>
+        {this.state.ascii !== '' ? (
+          <div>
+            <img
+              alt="ASCII version"
+              src={this.state.ascii}
+              style={{ width: '100%', height: 'auto' }}
+            />
+          </div>
+        ) : (
+          <span />
+        )}
       </div>
     );
   }
