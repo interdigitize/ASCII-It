@@ -65,7 +65,7 @@ app.post('/photo', function(req, res, next) {
       .stroke('#CCCCCC')
       .font('Courier.ttf', fontSize)
       .setFormat('jpeg')
-      .drawText(10, 30, converted)
+      .drawText(30, 50, converted)
       .trim()
       .stream(function(err, stdout, stderr) {
         stdout.pipe(uploadFromStream());
