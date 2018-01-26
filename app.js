@@ -25,7 +25,7 @@ app.use(multer().any());
 
 // API routes
 app.post('/photo', function(req, res, next) {
-  req.setTimeout(30000);
+  req.setTimeout(60000);
   var mimetype = req.files[0].mimetype;
   var filename = req.files[0].originalname;
   var region = 'us-west-1';
