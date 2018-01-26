@@ -41,12 +41,12 @@ app.post('/photo', function(req, res, next) {
     if (!err) {
       width = size.width;
       height = size.height;
-      if (width / height >= 2) {
-        fontSize = width / 150;
+      if (width / height >= 1.5) {
+        fontSize = width / 200;
       } else if (width > height) {
-        fontSize = width / 100;
+        fontSize = width / 120;
       } else {
-        fontSize = height / 100;
+        fontSize = height / 120;
       }
       // console.log(
       //   'width:',
