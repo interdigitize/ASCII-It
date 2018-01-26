@@ -22,31 +22,33 @@ class Home extends Component {
 
   upload(e) {
     e.preventDefault();
-    var url = '/photo';
-    let data = this.state.file;
-    var config = {
-      headers: { 'content-type': 'multipart/form-data' }
-    };
-    this.setState({
-      selectDisabled: true,
-      submitDisabled: true
-    });
-    axios({ method: 'post', url, data, config })
-      .then(res => {
-        this.setState(
-          {
-            ascii: res.data,
-            selectDisabled: false,
-            submitDisabled: true
-          },
-          () => {
-            document.getElementById('upload').reset();
-          }
-        );
-      })
-      .catch(err => {
-        console.log(err);
+    if (this.state.typeError === false && this.state.sizeError === false) {
+      var url = '/photo';
+      let data = this.state.file;
+      var config = {
+        headers: { 'content-type': 'multipart/form-data' }
+      };
+      this.setState({
+        selectDisabled: true,
+        submitDisabled: true
       });
+      axios({ method: 'post', url, data, config })
+        .then(res => {
+          this.setState(
+            {
+              ascii: res.data,
+              selectDisabled: false,
+              submitDisabled: true
+            },
+            () => {
+              document.getElementById('upload').reset();
+            }
+          );
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 
   onChange(e) {
