@@ -25,6 +25,7 @@ app.use(multer().any());
 
 // API routes
 app.post('/photo', function(req, res, next) {
+  req.setTimeout(0);
   var mimetype = req.files[0].mimetype;
   var filename = req.files[0].originalname;
   var region = 'us-west-1';
@@ -40,10 +41,12 @@ app.post('/photo', function(req, res, next) {
     if (!err) {
       width = size.width;
       height = size.height;
-      if (width > height) {
+      if (width / height >= 2) {
+        fontSize = width / 150;
+      } else if (width > height) {
         fontSize = width / 100;
       } else {
-        fontSize = height / 80;
+        fontSize = height / 100;
       }
       // console.log(
       //   'width:',
