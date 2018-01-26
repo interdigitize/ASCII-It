@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import './Spinner.css';
+import './App.css';
 
 class Home extends Component {
   constructor(props) {
@@ -10,13 +11,13 @@ class Home extends Component {
       ascii: '',
       submitDisabled: true,
       selectDisabled: false,
-      error: false
+      typeError: false,
+      sizeError: false
     };
     this.upload = this.upload.bind(this);
     this.onChange = this.onChange.bind(this);
     this.validate = this.validate.bind(this);
     this.reset = this.reset.bind(this);
-    this.errors = [];
   }
 
   upload(e) {
@@ -50,9 +51,7 @@ class Home extends Component {
 
   onChange(e) {
     e.preventDefault();
-    // console.log('file info', e.target.files[0]);
     this.setState({
-      error: false,
       ascii: ''
     });
     this.validate(e.target.files[0]);
@@ -64,43 +63,39 @@ class Home extends Component {
       ascii: '',
       submitDisabled: true,
       selectDisabled: false,
-      error: false
+      typeError: false,
+      sizeError: false
     });
   }
 
   validate(file) {
-    if (typeof file.type !== 'undefined') {
+    if (file) {
       if (
         file.type === 'image/jpeg' ||
         file.type === 'image/jpg' ||
-        file.type === 'image/png' ||
-        file.type === 'image/gif'
+        file.type === 'image/png'
       ) {
         if (file.size < 5000000) {
           let formData = new FormData();
           formData.append('file', file);
           this.setState({
             file: formData,
-            submitDisabled: false
+            submitDisabled: false,
+            typeError: false,
+            sizeError: false
           });
         } else {
-          this.setState(
-            {
-              error: true,
-              submitDisabled: true
-            },
-            () => this.errors.push('size')
-          );
+          this.setState({
+            sizeError: true,
+            submitDisabled: true
+          });
         }
       } else {
         // console.log('error in else', this.state.error);
-        this.setState(
-          {
-            error: true,
-            submitDisabled: true
-          },
-          () => this.errors.push('type')
-        );
+        this.setState({
+          typeError: true,
+          submitDisabled: true
+        });
       }
     } else {
       this.reset();
@@ -108,12 +103,8 @@ class Home extends Component {
   }
 
   render() {
-    var errors = {
-      size: 'Please select a file smaller than 5MB.',
-      type: 'Please select a jpg or png.'
-    };
     return (
-      <div className="content">
+      <main>
         <h2>Upload an image to convert it.</h2>
         <form id="upload">
           <input
@@ -127,14 +118,13 @@ class Home extends Component {
             disabled={this.state.submitDisabled}>
             ASCII It
           </button>
-          {/* {console.log('Error', this.state.error, this.errors)} */}
-          {this.state.error ? (
-            <div>
-              {this.errors.map(error => {
-                // console.log(errors, errors[error]);
-                return <p>{errors[error]}</p>;
-              })}
-            </div>
+          {this.state.typeError ? (
+            <div className="error">Please select a jpg or png.</div>
+          ) : (
+            <span />
+          )}
+          {this.state.sizeError ? (
+            <div className="error">Please select a file smaller than 5MB.</div>
           ) : (
             <span />
           )}
@@ -158,7 +148,7 @@ class Home extends Component {
         ) : (
           <span />
         )}
-      </div>
+      </main>
     );
   }
 }

@@ -29,7 +29,13 @@ footer {
   width: 100vw;
 }
 
+main {
+  margin: 0 5% 2% 5%;
+}
+
 button {
+  font-size: 1.5rem;
+  font-family: monospace;
   border-radius: 5px;
   background-color: steelblue;
   color: white;
@@ -44,4 +50,9 @@ button:disabled {
 
 button:active {
   background-color: steelblue;
+}
+
+.error {
+  color: #ff0000;
+  font-family: Helvetica, sans-serif;
 }
