@@ -18,7 +18,9 @@ class App extends Component {
               <Redirect from="/main/past" to="/past" /> */}
             {/* <Redirect from="/" to="/home" /> */}
           </Switch>
-          <footer />
+          <footer>
+            <a href="http://interdigitize.com/">interdigitize.com</a>
+          </footer>
         </div>
       </BrowserRouter>
     );
