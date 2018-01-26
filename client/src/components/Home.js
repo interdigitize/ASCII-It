@@ -7,7 +7,8 @@ class Home extends Component {
     this.state = {
       file: undefined,
       ascii: '',
-      disabled: false
+      submitDisabled: true,
+      selectDisabled: false
     };
     this.upload = this.upload.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -20,13 +21,17 @@ class Home extends Component {
     var config = {
       headers: { 'content-type': 'multipart/form-data' }
     };
-    this.setState({ disabled: true });
+    this.setState({
+      selectDisabled: true,
+      submitDisabled: true
+    });
     axios({ method: 'post', url, data, config })
       .then(res => {
         this.setState(
           {
             ascii: res.data,
-            disabled: false
+            selectDisabled: false,
+            submitDisabled: true
           },
           () => {
             document.getElementById('upload').reset();
@@ -43,7 +48,8 @@ class Home extends Component {
     let formData = new FormData();
     formData.append('file', e.target.files[0]);
     this.setState({
-      file: formData
+      file: formData,
+      submitDisabled: false
     });
   }
 
@@ -56,12 +62,12 @@ class Home extends Component {
           <input
             type="file"
             onChange={this.onChange}
-            disabled={this.state.disabled}
+            disabled={this.state.selectDisabled}
           />
           <button
             type="submit"
             onClick={this.upload}
-            disabled={this.state.disabled}>
+            disabled={this.state.submitDisabled}>
             ASCII It
           </button>
         </form>
